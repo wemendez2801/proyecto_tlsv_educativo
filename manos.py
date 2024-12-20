@@ -2,12 +2,19 @@ import cv2
 import mediapipe as mp
 import time
 
-# Configuración de la cámara
-cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)  # Alternativa: cv2.CAP_MSMF
-#cap = cv2.VideoCapture(0)
-if not cap.isOpened():
-    print("Error: No se puede acceder a la cámara.")
+# Función para inicializar la cámara con diferentes backends
+def initialize_camera(camera_index=0):
+    backends = [cv2.CAP_DSHOW, cv2.CAP_MSMF]
+    for backend in backends:
+        cap = cv2.VideoCapture(camera_index, backend)
+        if cap.isOpened():
+            print(f"Cámara inicializada con backend {backend}.")
+            return cap
+    print("Error: No se puede acceder a la cámara con ninguno de los backends disponibles.")
     exit()
+
+# Inicializar la cámara
+cap = initialize_camera()
 
 # Inicialización de Mediapipe
 mpHands = mp.solutions.hands
@@ -42,13 +49,17 @@ try:
                 mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
 
         # Cálculo de FPS
+        """ 
         cTime = time.time()
         fps = 1 / (cTime - pTime)
-        pTime = cTime
+        pTime = cTime 
+        """
 
         # Mostrar FPS en la imagen
+        """ 
         cv2.putText(img, f'FPS: {int(fps)}', (10, 70), cv2.FONT_HERSHEY_PLAIN, 3, 
-                    (255, 0, 255), 3)
+                    (255, 0, 255), 3) 
+        """
 
         # Mostrar la imagen
         cv2.imshow("Image", img)

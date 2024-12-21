@@ -1,6 +1,5 @@
 import cv2
 import mediapipe as mp
-import time
 
 # Función para inicializar la cámara con diferentes backends
 def initialize_camera(camera_index=0):
@@ -21,9 +20,6 @@ mpHands = mp.solutions.hands
 hands = mpHands.Hands(static_image_mode=False, max_num_hands=2, 
                       min_detection_confidence=0.7, min_tracking_confidence=0.7)
 mpDraw = mp.solutions.drawing_utils
-
-# Variables para calcular FPS
-pTime = 0
 
 try:
     while True:
@@ -48,22 +44,11 @@ try:
                 # Dibuja la mano y las conexiones
                 mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
 
-        # Cálculo de FPS
-        """ 
-        cTime = time.time()
-        fps = 1 / (cTime - pTime)
-        pTime = cTime 
-        """
-
-        # Mostrar FPS en la imagen
-        """ 
-        cv2.putText(img, f'FPS: {int(fps)}', (10, 70), cv2.FONT_HERSHEY_PLAIN, 3, 
-                    (255, 0, 255), 3) 
-        """
-
         # Mostrar la imagen
         cv2.imshow("Image", img)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        
+        # Detectar cierre de ventana o tecla 'q'
+        if cv2.waitKey(1) & 0xFF == ord('q') or cv2.getWindowProperty("Image", cv2.WND_PROP_VISIBLE) < 1:
             break
 except Exception as e:
     print(f"Error: {e}")

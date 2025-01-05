@@ -6,7 +6,7 @@ DATA_DIR = './data'
 if not os.path.exists(DATA_DIR):
     os.makedirs(DATA_DIR)
 
-number_of_classes = 3
+number_of_classes = 5
 dataset_size = 100
 
 # Función para inicializar la cámara con diferentes backends

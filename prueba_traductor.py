@@ -7,8 +7,19 @@ import numpy as np
 model_dict = pickle.load(open('./model.p', 'rb'))
 model = model_dict['model']
 
+# Función para inicializar la cámara con diferentes backends
+def initialize_camera(camera_index=0):
+    backends = [cv2.CAP_DSHOW, cv2.CAP_MSMF]
+    for backend in backends:
+        cap = cv2.VideoCapture(camera_index, backend)
+        if cap.isOpened():
+            print(f"Cámara inicializada con backend {backend}.")
+            return cap
+    print("Error: No se puede acceder a la cámara con ninguno de los backends disponibles.")
+    exit()
+
 # Inicializar la cámara
-cap = cv2.VideoCapture(0)
+cap = initialize_camera()
 
 # Configuración de MediaPipe
 mp_hands = mp.solutions.hands
@@ -18,7 +29,7 @@ mp_drawing_styles = mp.solutions.drawing_styles
 hands = mp_hands.Hands(static_image_mode=True, min_detection_confidence=0.3)
 
 # Diccionario de etiquetas
-labels_dict = {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E'}
+labels_dict = {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E', 5:'Saludos', 6:'Gracias', 7:'Liceo'}
 
 # Bucle de captura de video
 while True:

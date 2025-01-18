@@ -1,24 +1,14 @@
 import os
 import cv2
+from funciones import *
 
 # Creación de carpeta
 DATA_DIR = './data'
 if not os.path.exists(DATA_DIR):
     os.makedirs(DATA_DIR)
 
-number_of_classes = 8
+number_of_classes = 5
 dataset_size = 100
-
-# Función para inicializar la cámara con diferentes backends
-def initialize_camera(camera_index=0):
-    backends = [cv2.CAP_DSHOW, cv2.CAP_MSMF]
-    for backend in backends:
-        cap = cv2.VideoCapture(camera_index, backend)
-        if cap.isOpened():
-            print(f"Cámara inicializada con backend {backend}.")
-            return cap
-    print("Error: No se puede acceder a la cámara con ninguno de los backends disponibles.")
-    exit()
 
 # Inicializar la cámara
 cap = initialize_camera()

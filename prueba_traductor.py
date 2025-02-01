@@ -1,94 +1,103 @@
-import pickle
-import cv2
-import mediapipe as mp
 import numpy as np
+import os
+import string
+import mediapipe as mp
+import cv2
+import keyboard
+from tensorflow.keras.models import load_model
 from funciones import *
 
-# Cargar el modelo entrenado
-model_dict = pickle.load(open('./model.p', 'rb'))
-model = model_dict['model']
+# Set the path to the data directory
+PATH = os.path.join('data')
 
-# Inicializar la cámara
+# Create an array of action labels by listing the contents of the data directory
+actions = np.array(os.listdir(PATH))
+
+# Load the trained model
+model = load_model('my_model.keras')
+
+# Initialize the lists
+sentence, keypoints, last_prediction = [], [], []
+
+# Access the camera and check if the camera is opened successfully
 cap = initialize_camera()
 
-# Configuración de MediaPipe
-mp_hands = mp.solutions.hands
-mp_drawing = mp.solutions.drawing_utils
-mp_drawing_styles = mp.solutions.drawing_styles
+# Create a holistic object for sign prediction
+with mp.solutions.holistic.Holistic(min_detection_confidence=0.75, min_tracking_confidence=0.75) as holistic:
+    # Run the loop while the camera is open
+    while cap.isOpened():
+        # Read a frame from the camera
+        _, image = cap.read()
+        # Process the image and obtain sign landmarks using image_process function from my_functions.py
+        results = image_process(image, holistic)
+        # Draw the sign landmarks on the image using draw_landmarks function from my_functions.py
+        image = image.copy()  # Evita problemas de solo lectura
+        draw_landmarks(image, results)
+        # Extract keypoints from the pose landmarks using keypoint_extraction function from my_functions.py
+        keypoints.append(keypoint_extraction(results))
 
-hands = mp_hands.Hands(static_image_mode=True, min_detection_confidence=0.3)
+        # Check if 10 frames have been accumulated
+        if len(keypoints) == 10:
+            # Convert keypoints list to a numpy array
+            keypoints = np.array(keypoints)
+            # Make a prediction on the keypoints using the loaded model
+            prediction = model.predict(keypoints[np.newaxis, :, :])
+            # Clear the keypoints list for the next set of frames
+            keypoints = []
 
-# Diccionario de etiquetas
-labels_dict = {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E'}
+            # Check if the maximum prediction value is above 0.9
+            if np.amax(prediction) > 0.9:
+                # Check if the predicted sign is different from the previously predicted sign
+                if last_prediction != actions[np.argmax(prediction)]:
+                    # Append the predicted sign to the sentence list
+                    sentence.append(actions[np.argmax(prediction)])
+                    # Record a new prediction to use it on the next cycle
+                    last_prediction = actions[np.argmax(prediction)]
 
-# Bucle de captura de video
-while True:
-    data_aux = []
-    x_ = []
-    y_ = []
+        # Limit the sentence length to 7 elements to make sure it fits on the screen
+        if len(sentence) > 7:
+            sentence = sentence[-7:]
 
-    # Capturar un frame de la cámara
-    ret, frame = cap.read()
-    if not ret:
-        print("Error al capturar el frame.")
-        break
+        # Reset if the "Spacebar" is pressed
+        if keyboard.is_pressed(' '):
+            sentence, keypoints, last_prediction = [], [], []
 
-    # Voltear la imagen horizontalmente para corregir inversión
-    frame = cv2.flip(frame, 1)  # Eliminar esta línea si la cámara ya no invierte la imagen
+        # Check if the list is not empty
+        if sentence:
+            # Capitalize the first word of the sentence
+            sentence[0] = sentence[0].capitalize()
 
-    H, W, _ = frame.shape
+        # Check if the sentence has at least two elements
+        if len(sentence) >= 2:
+            # Check if the last element of the sentence belongs to the alphabet (lower or upper cases)
+            if sentence[-1] in string.ascii_lowercase or sentence[-1] in string.ascii_uppercase:
+                # Check if the second last element of sentence belongs to the alphabet or is a new word
+                if sentence[-2] in string.ascii_lowercase or sentence[-2] in string.ascii_uppercase or (sentence[-2] not in actions and sentence[-2] not in list(x.capitalize() for x in actions)):
+                    # Combine last two elements
+                    sentence[-1] = sentence[-2] + sentence[-1]
+                    sentence.pop(len(sentence) - 2)
+                    sentence[-1] = sentence[-1].capitalize()
+        
+        # Calculate the size of the text to be displayed and the X coordinate for centering the text on the image
+        textsize = cv2.getTextSize(' '.join(sentence), cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0]
+        text_X_coord = (image.shape[1] - textsize[0]) // 2
 
-    # Convertir a RGB para MediaPipe
-    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        # CORRECCION
+        image = image.copy()
 
-    # Procesar la imagen para detectar manos
-    results = hands.process(frame_rgb)
-    if results.multi_hand_landmarks:
-        for hand_landmarks in results.multi_hand_landmarks:
-            # Dibujar los landmarks de la mano
-            mp_drawing.draw_landmarks(
-                frame,  # Imagen donde se dibuja
-                hand_landmarks,  # Output del modelo
-                mp_hands.HAND_CONNECTIONS,  # Conexiones de la mano
-                mp_drawing_styles.get_default_hand_landmarks_style(),
-                mp_drawing_styles.get_default_hand_connections_style())
+        # Dibujar el texto en la imagen
+        cv2.putText(image, ' '.join(sentence), (text_X_coord, 470),
+            cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
 
-        # Normalizar las coordenadas
-        for hand_landmarks in results.multi_hand_landmarks:
-            for i in range(len(hand_landmarks.landmark)):
-                x = hand_landmarks.landmark[i].x
-                y = hand_landmarks.landmark[i].y
+        # Show the image on the display
+        cv2.imshow('Camera', image)
 
-                x_.append(x)
-                y_.append(y)
+        cv2.waitKey(1)
 
-            for i in range(len(hand_landmarks.landmark)):
-                x = hand_landmarks.landmark[i].x
-                y = hand_landmarks.landmark[i].y
-                data_aux.append(x - min(x_))
-                data_aux.append(y - min(y_))
+        # Check if the 'Camera' window was closed and break the loop
+        if cv2.getWindowProperty('Camera',cv2.WND_PROP_VISIBLE) < 1:
+            break
 
-        # Calcular la caja delimitadora (bounding box)
-        x1 = int(min(x_) * W) - 10
-        y1 = int(min(y_) * H) - 10
-
-        x2 = int(max(x_) * W) - 10
-        y2 = int(max(y_) * H) - 10
-
-        # Hacer la predicción del modelo
-        prediction = model.predict([np.asarray(data_aux)])
-        predicted_character = labels_dict[int(prediction[0])]
-
-        # Dibujar el rectángulo y el texto de la predicción
-        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 0), 4)
-        cv2.putText(frame, predicted_character, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 250, 0), 3,
-                    cv2.LINE_AA)
-
-    # Mostrar el frame procesado
-    cv2.imshow('frame', frame)
-    if cv2.waitKey(1) & 0xFF == ord('q'):  # Salir con 'q'
-        break
-
-# Liberar recursos
-cap.release()
-cv2.destroyAllWindows()
+    # Release the camera and close all windows
+    cap.release()
+    cv2.destroyAllWindows()

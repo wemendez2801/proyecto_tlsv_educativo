@@ -8,23 +8,22 @@ from sklearn import metrics
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense
 
-# Set the path to the data directory
+# Ruta de los datos
 PATH = os.path.join('data')
 
-# Create an array of actions (signs) labels by listing the contents of the data directory
+# Se crea un arreglo de etiquetas de señas
 actions = np.array(os.listdir(PATH))
 
-# Define the number of sequences and frames
 sequences = 30
 frames = 10
 
-# Create a label map to map each action label to a numeric value
+# Se crea un mapa de etiquetas para que cada etiqueta sea un número
 label_map = {label:num for num, label in enumerate(actions)}
 
-# Initialize empty lists to store landmarks and labels
+# Inicializa de landmarks y etiquetas
 landmarks, labels = [], []
 
-# Iterate over actions and sequences to load landmarks and corresponding labels
+# Itera sobre acciones y secuencias para cargar landmarks y etiquetas correspondientes
 for action, sequence in product(actions, range(sequences)):
     temp = []
     for frame in range(frames):
@@ -33,13 +32,13 @@ for action, sequence in product(actions, range(sequences)):
     landmarks.append(temp)
     labels.append(label_map[action])
 
-# Convert landmarks and labels to numpy arrays
+# Convierte landmarks y etiquetas a numpy
 X, Y = np.array(landmarks), to_categorical(labels).astype(int)
 
-# Split the data into training and testing sets
+# Separacion en datasets de entrenamiento y prueba
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.10, random_state=34, stratify=Y)
 
-# Define the model architecture
+# Arquitectura del modelo
 model = Sequential()
 model.add(LSTM(32, return_sequences=True, activation='relu', input_shape=(10,126)))
 model.add(LSTM(64, return_sequences=True, activation='relu'))
@@ -47,18 +46,18 @@ model.add(LSTM(32, return_sequences=False, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(actions.shape[0], activation='softmax'))
 
-# Compile the model with Adam optimizer and categorical cross-entropy loss
+# Compila el modelo con optimizador Adam y perdida categorica cross-entropy
 model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
-# Train the model
+# Entrena el modelo
 model.fit(X_train, Y_train, epochs=100)
 
-# Save the trained model
+# Se guarda el modelo
 model.save('my_model.keras')
 
-# Make predictions on the test set
+# Hacer predicciones con el set de prueba
 predictions = np.argmax(model.predict(X_test), axis=1)
 # Get the true labels from the test set
 test_labels = np.argmax(Y_test, axis=1)
 
-# Calculate the accuracy of the predictions
+# Calcula la precision de las predicciones
 accuracy = metrics.accuracy_score(test_labels, predictions)

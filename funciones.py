@@ -14,59 +14,34 @@ def initialize_camera(camera_index=0):
     print("Error: No se puede acceder a la cámara con ninguno de los backends disponibles.")
     exit()
 
+# Dibuja los landmarks detectados en la imagen
 def draw_landmarks(image, results):
-    """
-    Draw the landmarks on the image.
-
-    Args:
-        image (numpy.ndarray): The input image.
-        results: The landmarks detected by Mediapipe.
-
-    Returns:
-        None
-    """
-    # Draw landmarks for left hand
+    # Landmarks de mano izquierda
     mp.solutions.drawing_utils.draw_landmarks(image, results.left_hand_landmarks, mp.solutions.holistic.HAND_CONNECTIONS)
-    # Draw landmarks for right hand
+    # Landmarks de mano derecha
     mp.solutions.drawing_utils.draw_landmarks(image, results.right_hand_landmarks, mp.solutions.holistic.HAND_CONNECTIONS)
 
+# Procesa las imagenes para obtener los landmarks de la seña realizada
 def image_process(image, model):
-    """
-    Process the image and obtain sign landmarks.
 
-    Args:
-        image (numpy.ndarray): The input image.
-        model: The Mediapipe holistic object.
-
-    Returns:
-        results: The processed results containing sign landmarks.
-    """
     def image_process(image, model):
         if image is None:
             print("Error: La imagen recibida no es valida")
             return None  # Devuelve None en lugar de fallar
 
-    image.flags.writeable = False  # Aquí ocurría el error
+    image.flags.writeable = False 
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     results = model.process(image)
     image.flags.writeable = True
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
     return results
 
+# Extrae puntos clave de los landmarks de las manos
 def keypoint_extraction(results):
-    """
-    Extract the keypoints from the sign landmarks.
-
-    Args:
-        results: The processed results containing sign landmarks.
-
-    Returns:
-        keypoints (numpy.ndarray): The extracted keypoints.
-    """
-    # Extract the keypoints for the left hand if present, otherwise set to zeros
+    # Extrae los puntos de la mano izquierda o devolvera ceros
     lh = np.array([[res.x, res.y, res.z] for res in results.left_hand_landmarks.landmark]).flatten() if results.left_hand_landmarks else np.zeros(63)
-    # Extract the keypoints for the right hand if present, otherwise set to zeros
+    # Extrae los puntos de la mano derecha o devolvera ceros
     rh = np.array([[res.x, res.y, res.z] for res in results.right_hand_landmarks.landmark]).flatten() if results.right_hand_landmarks else np.zeros(63)
-    # Concatenate the keypoints for both hands
+    # Concatena los puntos clave para cada mano
     keypoints = np.concatenate([lh, rh])
     return keypoints

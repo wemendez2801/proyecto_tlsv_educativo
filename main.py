@@ -11,7 +11,7 @@ def ventana_menu(root):
     root.configure(bg="#007935")  # Color verde de fondo
     
     # Título
-    titulo = tk.Label(root, text="TRADUCTOR DE LENGUAJE DE SEÑAS VENEZOLANO EDUCATIVO",
+    titulo = tk.Label(root, text="TRADUCTOR DE LENGUA DE SEÑAS VENEZOLANO EDUCATIVO",
                       bg="#37B4E3", fg="white", font=("Arial", 12, "bold"), padx=20, pady=10)
     titulo.pack(pady=30)
 
@@ -36,11 +36,11 @@ def ventana_traductor(root):
     for widget in root.winfo_children():
         widget.destroy()
 
-    root.title("Traductor de Lenguaje de Señas Venezolano Educativo")
+    root.title("Traductor de Lengua de Señas Venezolano Educativo")
     root.configure(bg="#007935")  # Color verde de fondo
 
     # Título
-    titulo = tk.Label(root, text="TRADUCTOR DE LENGUAJE DE SEÑAS VENEZOLANO EDUCATIVO",
+    titulo = tk.Label(root, text="TRADUCTOR DE LENGUA DE SEÑAS VENEZOLANO EDUCATIVO",
                       bg="#37B4E3", fg="white", font=("Arial", 12, "bold"), padx=20, pady=10)
     titulo.pack(pady=30)
 
@@ -59,7 +59,7 @@ def ventana_informacion(root):
     root.configure(bg="#007935")  # Color verde de fondo
 
     # Título
-    titulo = tk.Label(root, text="TRADUCTOR DE LENGUAJE DE SEÑAS VENEZOLANO EDUCATIVO",
+    titulo = tk.Label(root, text="TRADUCTOR DE LENGUA DE SEÑAS VENEZOLANO EDUCATIVO",
                       bg="#37B4E3", fg="white", font=("Arial", 12, "bold"), padx=20, pady=10)
     titulo.pack(pady=20)
 
@@ -67,7 +67,7 @@ def ventana_informacion(root):
     texto_info = (
         "Esta aplicación ha sido diseñada como una herramienta inclusiva que facilita la\n"
         "comunicación entre estudiantes con discapacidades del habla en el entorno educativo,\n"
-        "utilizando como base el Lenguaje de Señas Venezolano (LSV). La aplicación emplea\n"
+        "utilizando como base la Lengua de Señas Venezolano (LSV). La aplicación emplea\n"
         "tecnología de inteligencia artificial y visión por computadora para identificar las señas\n"
         "realizadas por el usuario y traducirlas en tiempo real mediante texto en pantalla. Se permite\n"
         "una interacción más efectiva y accesible dentro de aulas de clase y otros contextos educativos.\n\n"

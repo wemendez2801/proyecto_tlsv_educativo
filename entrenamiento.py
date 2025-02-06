@@ -61,3 +61,5 @@ test_labels = np.argmax(Y_test, axis=1)
 
 # Calcula la precision de las predicciones
 accuracy = metrics.accuracy_score(test_labels, predictions)
+
+print(f'Precisión del modelo: {accuracy * 100:.2f}%')

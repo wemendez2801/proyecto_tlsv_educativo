@@ -4,19 +4,19 @@ import cv2
 
 # Función para inicializar la cámara con diferentes backends
 def initialize_camera(camera_index=0):
-    cap = cv2.VideoCapture(0)
+    """ cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         print("Cannot access camera.")
-        exit()
+        exit() """
 
-    """ backends = [cv2.CAP_DSHOW, cv2.CAP_MSMF]
+    backends = [cv2.CAP_DSHOW, cv2.CAP_MSMF]
     for backend in backends:
         cap = cv2.VideoCapture(camera_index, backend)
         if cap.isOpened():
             print(f"Cámara inicializada con backend {backend}.")
             return cap
     print("Error: No se puede acceder a la cámara con ninguno de los backends disponibles.")
-    exit() """
+    exit()
 
 # Dibuja los landmarks detectados en la imagen
 def draw_landmarks(image, results):

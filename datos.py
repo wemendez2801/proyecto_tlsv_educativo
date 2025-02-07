@@ -25,9 +25,19 @@ for action, sequence in product(actions, range(sequences)):
 
 # Inicializar la cámara
 cap = initialize_camera()
+if cap is None:
+    print("Error: No se pudo inicializar la cámara.")
+    exit()
 
 # Creacion de objeto de Mediapipe Holistic para deteccion de las manos
-with mp.solutions.holistic.Holistic(min_detection_confidence=0.75, min_tracking_confidence=0.75) as holistic:
+DETECTION_CONFIDENCE = 0.75
+TRACKING_CONFIDENCE = 0.75
+
+with mp.solutions.holistic.Holistic(
+    min_detection_confidence=DETECTION_CONFIDENCE, 
+    min_tracking_confidence=TRACKING_CONFIDENCE
+) as holistic:
+
     # Bucle en cada accion, secuencia y frame para captar datos
     for action, sequence, frame in product(actions, range(sequences), range(frames)):
         # Se espera por la barra espaciadora para empezar

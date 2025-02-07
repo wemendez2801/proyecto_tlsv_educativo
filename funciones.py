@@ -10,13 +10,22 @@ def initialize_camera(camera_index=0):
         exit() """
 
     backends = [cv2.CAP_DSHOW, cv2.CAP_MSMF]
+    cap = None
+
     for backend in backends:
-        cap = cv2.VideoCapture(camera_index, backend)
-        if cap.isOpened():
+        temp_cap = cv2.VideoCapture(camera_index, backend)
+        if temp_cap.isOpened():
             print(f"Cámara inicializada con backend {backend}.")
-            return cap
-    print("Error: No se puede acceder a la cámara con ninguno de los backends disponibles.")
-    exit()
+            cap = temp_cap
+            break
+        else:
+            temp_cap.release()  # Libera el recurso si falla
+
+    if cap is None:
+        print("Error: No se puede acceder a la cámara con ninguno de los backends disponibles.")
+        exit()
+    
+    return cap
 
 # Dibuja los landmarks detectados en la imagen
 def draw_landmarks(image, results):

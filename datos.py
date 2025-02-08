@@ -7,7 +7,16 @@ from itertools import product
 from funciones import *
 
 # Define las acciones (señas) de las que se capturaran las imagenes
-actions = np.array(['buen','dia', 'tarde'])
+actions = np.array([
+    'yo','tu', 'nosotros', 'ustedes', 
+    'hola','adios','gracias', 'buen', 'dia', 'por favor', 'permiso', 'perdon', 'bienvenidos',
+    'que','quien','por que', 'cuando', 'cuanto', 'como','cual','pregunta', 'respuesta',
+    'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo',
+    'enero','febrero', 'marzo','abril','mayo','junio', 'julio', 'agosto', 'septiembre','octubre', 'noviembre','diciembre',
+    'hoy', 'ayer', 'mañana', 'semana',
+    'aprender','aprobar', 'ayudar', 'entender', 'enseñar', 'explicar', 'haber', 'hacer', 'ir',
+    'materia','biologia','fisica','matematica','castellano','geografia'
+    ])
 
 # Define el numero de secuencias y frames que se capturaran por cada accion
 sequences = 30

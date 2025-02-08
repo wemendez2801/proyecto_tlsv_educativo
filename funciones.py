@@ -51,10 +51,15 @@ def image_process(image, model):
 
 # Extrae puntos clave de los landmarks de las manos
 def keypoint_extraction(results):
-    # Extrae los puntos de la mano izquierda o devolvera ceros
-    lh = np.array([[res.x, res.y, res.z] for res in results.left_hand_landmarks.landmark]).flatten() if results.left_hand_landmarks else np.zeros(63)
-    # Extrae los puntos de la mano derecha o devolvera ceros
-    rh = np.array([[res.x, res.y, res.z] for res in results.right_hand_landmarks.landmark]).flatten() if results.right_hand_landmarks else np.zeros(63)
-    # Concatena los puntos clave para cada mano
-    keypoints = np.concatenate([lh, rh])
+    """Extrae los keypoints de ambas manos y devuelve un vector de tamaño fijo (126 valores)."""
+    keypoints = np.zeros(126)  # Vector de ceros para asegurar tamaño constante
+    
+    if results.left_hand_landmarks:
+        left_hand = np.array([[lmk.x, lmk.y, lmk.z] for lmk in results.left_hand_landmarks.landmark]).flatten()
+        keypoints[:len(left_hand)] = left_hand  # Llenar con los valores reales
+    
+    if results.right_hand_landmarks:
+        right_hand = np.array([[lmk.x, lmk.y, lmk.z] for lmk in results.right_hand_landmarks.landmark]).flatten()
+        keypoints[63:63+len(right_hand)] = right_hand  # Colocar en la segunda mitad del vector
+    
     return keypoints

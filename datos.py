@@ -14,13 +14,14 @@ actions = np.array([
     'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo',
     'enero','febrero', 'marzo','abril','mayo','junio', 'julio', 'agosto', 'septiembre','octubre', 'noviembre','diciembre',
     'hoy', 'ayer', 'mañana', 'semana',
-    'aprender','aprobar', 'ayudar', 'entender', 'enseñar', 'explicar', 'haber', 'hacer', 'ir',
-    'materia','biologia','fisica','matematica','castellano','geografia'
+    'estudiar','educacion','aprender','aprobar', 'ayudar', 'entender', 'enseñar', 'explicar', 'haber', 'hacer', 'ir',
+    'materia','biologia','fisica','matematica','castellano','geografia', 'informatica','ingles',
+    'profesor','tareas','proyecto','semestre','cuaderno','hoja','notas','grupo','casa'
     ])
 
 # Define el numero de secuencias y frames que se capturaran por cada accion
 sequences = 30
-frames = 10
+frames = 20
 
 # Ruta de almacenamiento del dataset
 PATH = os.path.join('data')

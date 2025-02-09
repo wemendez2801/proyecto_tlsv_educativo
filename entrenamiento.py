@@ -15,7 +15,7 @@ PATH = os.path.join('data')
 actions = np.array(os.listdir(PATH))
 
 sequences = 30
-frames = 10
+frames = 20
 
 # Se crea un mapa de etiquetas para que cada etiqueta sea un número
 label_map = {label:num for num, label in enumerate(actions)}
@@ -40,7 +40,7 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.10, random
 
 # Arquitectura del modelo
 model = Sequential()
-model.add(LSTM(32, return_sequences=True, activation='relu', input_shape=(10,126)))
+model.add(LSTM(32, return_sequences=True, activation='relu', input_shape=(20,126)))
 model.add(LSTM(64, return_sequences=True, activation='relu'))
 model.add(LSTM(32, return_sequences=False, activation='relu'))
 model.add(Dense(32, activation='relu'))

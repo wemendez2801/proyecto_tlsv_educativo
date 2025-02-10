@@ -8,15 +8,19 @@ from funciones import *
 
 # Define las acciones (señas) de las que se capturaran las imagenes
 actions = np.array([
-    'yo','tu', 'nosotros', 'ustedes', 
+    'yo','tu', 'el', 'nosotros', 'ustedes', 
     'hola','adios','gracias', 'buen', 'dia', 'por favor', 'permiso', 'perdon', 'bienvenidos',
     'que','quien','por que', 'cuando', 'cuanto', 'como','cual','pregunta', 'respuesta',
     'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo',
     'enero','febrero', 'marzo','abril','mayo','junio', 'julio', 'agosto', 'septiembre','octubre', 'noviembre','diciembre',
     'hoy', 'ayer', 'mañana', 'semana',
-    'estudiar','educacion','aprender','aprobar', 'ayudar', 'entender', 'enseñar', 'explicar', 'haber', 'hacer', 'ir',
     'materia','biologia','fisica','matematica','castellano','geografia', 'informatica','ingles',
-    'profesor','tareas','proyecto','semestre','cuaderno','hoja','notas','grupo','casa'
+    'estudiar','aprender','aprobar', 'ayuda', 'entender', 'enseñar', 'explicar', 'haber', 'hacer', 'ir','saber',
+    'practicar', 'prestar', 'poder','leer','repetir','usar','repetir','tener','tengo','ver','necesitar','encontrar',
+    'profesor','grupo','coordinador','director',
+    'cuaderno','hoja','notas', 'transporte', 'lapiz', 'libro', 'lista',
+    'casa', 'baño','universidad',
+    'educacion','tareas','proyecto','semestre','certificado','clase','examen','exposicion','notas','ejemplo','experimento'
     ])
 
 # Define el numero de secuencias y frames que se capturaran por cada accion

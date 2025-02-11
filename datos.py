@@ -16,11 +16,11 @@ actions = np.array([
     'hoy', 'ayer', 'mañana', 'semana',
     'materia','biologia','fisica','matematica','castellano','geografia', 'informatica','ingles',
     'estudiar','aprender','aprobar', 'ayuda', 'entender', 'enseñar', 'explicar', 'haber', 'hacer', 'ir','saber',
-    'practicar', 'prestar', 'poder','leer','repetir','usar','repetir','tener','tengo','ver','necesitar','encontrar',
+    'practicar', 'prestar', 'poder','leer','repetir','usar','tener','tengo','ver','necesitar','encontrar',
     'profesor','grupo','coordinador','director',
     'cuaderno','hoja','notas', 'transporte', 'lapiz', 'libro', 'lista',
     'casa', 'baño','universidad',
-    'educacion','tareas','proyecto','semestre','certificado','clase','examen','exposicion','notas','ejemplo','experimento'
+    'educacion','tareas','proyecto','semestre','certificado','clase','examen','exposicion','ejemplo','experimento'
     ])
 
 # Define el numero de secuencias y frames que se capturaran por cada accion
@@ -68,7 +68,7 @@ with mp.solutions.holistic.Holistic(
                 image.flags.writeable = True
                 draw_landmarks(image, results)
 
-                cv2.putText(image, 'Guardandos datos para "{}". Secuencia numero {}.'.format(action, sequence),
+                cv2.putText(image, 'Guardando datos para "{}". Secuencia numero {}.'.format(action, sequence),
                             (20,20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,255), 1, cv2.LINE_AA)
                 cv2.putText(image, 'Pausa.', (20,400), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2, cv2.LINE_AA)
                 cv2.putText(image, 'Presiona Espacio cuando estes listo', (20,450), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2, cv2.LINE_AA)

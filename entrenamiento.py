@@ -49,7 +49,7 @@ model.add(Dense(actions.shape[0], activation='softmax'))
 # Compila el modelo con optimizador Adam y perdida categorica cross-entropy
 model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 # Entrena el modelo
-model.fit(X_train, Y_train, epochs=100)
+model.fit(X_train, Y_train, epochs=200)
 
 # Se guarda el modelo
 model.save('my_model.keras')

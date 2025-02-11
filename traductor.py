@@ -51,8 +51,8 @@ with mp.solutions.holistic.Holistic(min_detection_confidence=0.75, min_tracking_
                     last_prediction = actions[np.argmax(prediction)]
 
         # Limita la oracion a 7 palabras
-        if len(sentence) > 7:
-            sentence = sentence[-7:]
+        if len(sentence) > 5:
+            sentence = sentence[-5:]
 
         # Resetea si se presiona Espacio 
         if keyboard.is_pressed(' '):

@@ -21,7 +21,13 @@ sentence, keypoints, last_prediction = [], [], []
 cap = initialize_camera()
 
 # Crea un objeto holistico para reconocer señas
-with mp.solutions.holistic.Holistic(min_detection_confidence=0.75, min_tracking_confidence=0.75) as holistic:
+DETECTION_CONFIDENCE = 0.75
+TRACKING_CONFIDENCE = 0.75
+
+with mp.solutions.holistic.Holistic(
+    min_detection_confidence=DETECTION_CONFIDENCE, 
+    min_tracking_confidence=TRACKING_CONFIDENCE 
+) as holistic:
     # Bucle mientras la camara este activa
     while cap.isOpened():
         # Lee un frame de la camara
@@ -34,8 +40,8 @@ with mp.solutions.holistic.Holistic(min_detection_confidence=0.75, min_tracking_
         # Extrae puntos claves de los landmarks
         keypoints.append(keypoint_extraction(results))
 
-        # Revisa si se acumularon 10 frames
-        if len(keypoints) == 10:
+        # Revisa si se acumularon 20 frames
+        if len(keypoints) == 20:
             # Convierte lista de keypoints en arreglo numpy
             keypoints = np.array(keypoints)
             # Predice en base de los keypoints guardados
@@ -44,15 +50,15 @@ with mp.solutions.holistic.Holistic(min_detection_confidence=0.75, min_tracking_
             keypoints = []
 
             # Revisa si el valor maximo de prediccion es mayor a 0.9
-            if np.amax(prediction) > 0.9:
+            if np.amax(prediction) > 0.8:
                 # Revisa si la seña predicha es diferente a la anterior
                 if last_prediction != actions[np.argmax(prediction)]:
                     sentence.append(actions[np.argmax(prediction)])
                     last_prediction = actions[np.argmax(prediction)]
 
-        # Limita la oracion a 7 palabras
-        if len(sentence) > 5:
-            sentence = sentence[-5:]
+        # Limita la oracion a 5 palabras
+        if len(sentence) > 4:
+            sentence = sentence[-4:]
 
         # Resetea si se presiona Espacio 
         if keyboard.is_pressed(' '):

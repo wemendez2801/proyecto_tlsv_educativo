@@ -60,7 +60,7 @@ with mp.solutions.holistic.Holistic(
         if len(sentence) > 4:
             sentence = sentence[-4:]
 
-        # Resetea si se presiona Espacio 
+        # Limpia la pantalla de texto al presionar Espacio 
         if keyboard.is_pressed(' '):
             sentence, keypoints, last_prediction = [], [], []
 

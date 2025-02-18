@@ -64,6 +64,10 @@ with mp.solutions.holistic.Holistic(
         if keyboard.is_pressed(' '):
             sentence, keypoints, last_prediction = [], [], []
 
+        # Borra solo la última palabra al presionar Backspace
+        if keyboard.is_pressed('backspace') and sentence:
+            sentence.pop()
+        
         if sentence:
             # Primera letra mayuscula
             sentence[0] = sentence[0].capitalize()

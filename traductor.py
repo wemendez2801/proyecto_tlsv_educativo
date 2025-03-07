@@ -7,6 +7,7 @@ import keyboard
 from tensorflow.keras.models import load_model
 from funciones import *
 
+# Funcion para uso de otros programas
 def iniciar_traductor():
     PATH = os.path.join('data')
 

@@ -20,7 +20,7 @@ sentence, keypoints, last_prediction = [], [], []
 # Abre la camara
 cap = initialize_camera()
 
-# Crea un objeto holistico para reconocer señas
+# Creacion de objeto holistico para reconocer señas
 DETECTION_CONFIDENCE = 0.75
 TRACKING_CONFIDENCE = 0.75
 

@@ -4,11 +4,6 @@ import cv2
 
 # Función para inicializar la cámara con diferentes backends
 def initialize_camera(camera_index=0):
-    """ cap = cv2.VideoCapture(0)
-    if not cap.isOpened():
-        print("Cannot access camera.")
-        exit() """
-
     backends = [cv2.CAP_DSHOW, cv2.CAP_MSMF]
     cap = None
 
@@ -36,17 +31,25 @@ def draw_landmarks(image, results):
 
 # Procesa las imagenes para obtener los landmarks de la seña realizada
 def image_process(image, model):
+    if image is None:
+        print("Error: La imagen recibida no es válida.")
+        return None
+    if model is None:
+        print("Error: El modelo no ha sido inicializado.")
+        return None
 
-    def image_process(image, model):
-        if image is None:
-            print("Error: La imagen recibida no es valida")
-            return None  # Devuelve None en lugar de fallar
+    # Crear una copia de la imagen para no modificar la original
+    image_copy = image.copy()
 
-    image.flags.writeable = False 
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    results = model.process(image)
-    image.flags.writeable = True
-    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+    # Convertir la imagen a RGB
+    image_copy = cv2.cvtColor(image_copy, cv2.COLOR_BGR2RGB)
+
+    # Procesar la imagen con el modelo de Mediapipe
+    results = model.process(image_copy)
+
+    # Convertir la imagen de vuelta a BGR
+    image_copy = cv2.cvtColor(image_copy, cv2.COLOR_RGB2BGR)
+
     return results
 
 # Extrae puntos clave de los landmarks de las manos

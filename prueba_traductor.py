@@ -37,19 +37,22 @@ with mp.solutions.holistic.Holistic(
         # Dibuja los landmarks de la imagen
         image = image.copy()  
         draw_landmarks(image, results)
-        # Extrae puntos claves de los landmarks
-        keypoints.append(keypoint_extraction(results))
+        # Extrae puntos claves de los landmarks y apica suavizado
+        extracted_keypoints = keypoint_extraction(results)
+        if extracted_keypoints is not None:
+            smoothed_keypoints = np.mean([extracted_keypoints] + keypoints[-4:], axis=0) if len(keypoints) >= 4 else extracted_keypoints
+            keypoints.append(smoothed_keypoints)
 
-        # Revisa si se acumularon 20 frames
-        if len(keypoints) == 20:
-            # Convierte lista de keypoints en arreglo numpy
-            keypoints = np.array(keypoints)
+        # Revisa si se acumularon suficientes frames
+        if len(keypoints) >= 20:
+            # Convierte lista de keypoints en arreglo numpy y se toman los 20 frames anteriores
+            keypoints_array = np.array(keypoints[-20:]) 
             # Predice en base de los keypoints guardados
-            prediction = model.predict(keypoints[np.newaxis, :, :])
-            # Limpia la lista de keypoints para la siguiente prediccion
-            keypoints = []
+            prediction = model.predict(keypoints_array[np.newaxis, :, :])
+            # Limpia solo los frames usados para la prediccion
+            keypoints = keypoints[-10:] 
 
-            # Revisa si el valor maximo de prediccion es mayor a 0.9
+            # Umbral de prediccion
             if np.amax(prediction) > 0.8:
                 # Revisa si la seña predicha es diferente a la anterior
                 if last_prediction != actions[np.argmax(prediction)]:

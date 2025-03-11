@@ -7,6 +7,7 @@ from sklearn import metrics
 
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout, BatchNormalization
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 # Ruta de los datos
 PATH = os.path.join('data')
@@ -51,15 +52,27 @@ model.add(Dense(actions.shape[0], activation='softmax'))
 
 # Compila el modelo con optimizador Adam y perdida categorica cross-entropy
 model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
-# Entrena el modelo
-model.fit(X_train, Y_train, epochs=200)
 
-# Se guarda el modelo
+# Callbacks para mejorar el entrenamiento
+early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
+model_checkpoint = ModelCheckpoint('best_model.keras', monitor='val_loss', save_best_only=True)
+
+# Entrena el modelo con validación
+history = model.fit(
+    X_train, Y_train,
+    epochs=200,
+    validation_split=0.1,  # Usa 10% de los datos de entrenamiento para validación
+    callbacks=[early_stopping, model_checkpoint]
+)
+
+# Carga el mejor modelo guardado
+model.load_weights('best_model.keras')
+
+# Se guarda el modelo final
 model.save('my_model.keras')
 
 # Hacer predicciones con el set de prueba
 predictions = np.argmax(model.predict(X_test), axis=1)
-# Get the true labels from the test set
 test_labels = np.argmax(Y_test, axis=1)
 
 # Calcula la precision de las predicciones

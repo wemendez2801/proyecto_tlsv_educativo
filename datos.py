@@ -13,13 +13,13 @@ actions = np.array([
     'que','quien','por que', 'cuando', 'cuanto', 'como','cual','pregunta', 'respuesta',
     'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo',
     'enero','febrero', 'marzo','abril','mayo','junio', 'julio', 'agosto', 'septiembre','octubre', 'noviembre','diciembre',
-    'hoy', 'ayer', 'mañana', 'semana',
+    'hoy', 'ayer', 'semana',
     'materia','biologia','fisica','matematica','castellano','geografia', 'informatica','ingles',
-    'estudiar','aprender','aprobar', 'ayuda', 'entender', 'enseñar', 'explicar', 'haber', 'hacer', 'ir','saber',
+    'estudiar','aprender','aprobar', 'ayuda', 'entender', 'explicar', 'haber', 'hacer', 'ir','saber',
     'practicar', 'prestar', 'poder','leer','repetir','usar','tener','tengo','ver','necesitar','encontrar',
     'profesor','grupo','coordinador','director',
     'cuaderno','hoja','notas', 'transporte', 'lapiz', 'libro', 'lista',
-    'casa', 'baño','universidad',
+    'casa','universidad',
     'educacion','tareas','proyecto','semestre','certificado','clase','examen','exposicion','ejemplo','experimento'
     ])
 

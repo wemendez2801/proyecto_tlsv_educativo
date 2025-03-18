@@ -14,7 +14,7 @@ def iniciar_traductor():
     actions = np.array(os.listdir(PATH))
 
     # Carga el modelo entrenado
-    model = load_model('my_model.keras')
+    model = load_model('modelo.keras')
 
     # Inicializa las listas
     sentence, keypoints, last_prediction = [], [], []

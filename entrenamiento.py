@@ -54,14 +54,14 @@ model.add(Dense(actions.shape[0], activation='softmax'))
 model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 
 # Callbacks para mejorar el entrenamiento
-early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
+early_stopping = EarlyStopping(monitor='val_loss', patience=50, restore_best_weights=True)
 model_checkpoint = ModelCheckpoint('best_model.keras', monitor='val_loss', save_best_only=True)
 
 # Entrena el modelo con validación
 history = model.fit(
     X_train, Y_train,
-    epochs=200,
-    validation_split=0.1,  # Usa 10% de los datos de entrenamiento para validación
+    epochs=300,
+    validation_split=0.1, # Usa 10% de los datos de entrenamiento para validación 
     callbacks=[early_stopping, model_checkpoint]
 )
 
@@ -69,7 +69,7 @@ history = model.fit(
 model.load_weights('best_model.keras')
 
 # Se guarda el modelo final
-model.save('my_model.keras')
+model.save('modelo.keras')
 
 # Hacer predicciones con el set de prueba
 predictions = np.argmax(model.predict(X_test), axis=1)

@@ -12,7 +12,7 @@ PATH = os.path.join('data')
 actions = np.array(os.listdir(PATH))
 
 # Carga el modelo entrenado
-model = load_model('my_model.keras')
+model = load_model('modelo.keras')
 
 # Inicializa las listas
 sentence, keypoints, last_prediction = [], [], []
@@ -53,7 +53,7 @@ with mp.solutions.holistic.Holistic(
             keypoints = keypoints[-10:] 
 
             # Umbral de prediccion
-            if np.amax(prediction) > 0.8:
+            if np.amax(prediction) > 0.75:
                 # Revisa si la seña predicha es diferente a la anterior
                 if last_prediction != actions[np.argmax(prediction)]:
                     sentence.append(actions[np.argmax(prediction)])

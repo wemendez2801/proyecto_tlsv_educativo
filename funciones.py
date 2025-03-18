@@ -1,10 +1,11 @@
 import numpy as np
 import mediapipe as mp
 import cv2
+import time
 
 # Función para inicializar la cámara con diferentes backends
 def initialize_camera(camera_index=0):
-    backends = [cv2.CAP_DSHOW, cv2.CAP_MSMF]
+    backends = [cv2.CAP_DSHOW, cv2.CAP_MSMF, cv2.CAP_ANY]
     cap = None
 
     for backend in backends:
@@ -20,6 +21,8 @@ def initialize_camera(camera_index=0):
         print("Error: No se puede acceder a la cámara con ninguno de los backends disponibles.")
         exit()
     
+    # Espera 2 segundos para que la cámara se inicialice correctamente
+    time.sleep(2)
     return cap
 
 # Dibuja los landmarks detectados en la imagen

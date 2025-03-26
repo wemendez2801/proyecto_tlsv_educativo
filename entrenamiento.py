@@ -54,7 +54,7 @@ model.add(Dense(actions.shape[0], activation='softmax'))
 model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 
 # Callbacks para mejorar el entrenamiento
-early_stopping = EarlyStopping(monitor='val_loss', patience=50, restore_best_weights=True)
+early_stopping = EarlyStopping(monitor='val_loss', patience=80, restore_best_weights=True)
 model_checkpoint = ModelCheckpoint('best_model.keras', monitor='val_loss', save_best_only=True)
 
 # Entrena el modelo con validación

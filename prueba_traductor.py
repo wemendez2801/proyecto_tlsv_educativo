@@ -4,6 +4,7 @@ import string
 import mediapipe as mp
 import cv2
 import keyboard
+import time
 from tensorflow.keras.models import load_model
 from funciones import *
 
@@ -16,6 +17,9 @@ model = load_model('modelo.keras')
 
 # Inicializa las listas
 sentence, keypoints, last_prediction = [], [], []
+
+last_prediction_time = time.time()
+MIN_INTERVAL = 1.5  # Tiempo mínimo entre predicciones en segundos
 
 # Abre la camara
 cap = initialize_camera()
@@ -40,26 +44,26 @@ with mp.solutions.holistic.Holistic(
         # Extrae puntos claves de los landmarks y apica suavizado
         extracted_keypoints = keypoint_extraction(results)
         if extracted_keypoints is not None:
-            smoothed_keypoints = np.mean([extracted_keypoints] + keypoints[-4:], axis=0) if len(keypoints) >= 4 else extracted_keypoints
+            smoothed_keypoints = np.mean([extracted_keypoints] + keypoints[-6:], axis=0) if len(keypoints) >= 6 else extracted_keypoints
             keypoints.append(smoothed_keypoints)
 
         # Revisa si se acumularon suficientes frames
-        if len(keypoints) >= 20:
-            # Convierte lista de keypoints en arreglo numpy y se toman los 20 frames anteriores
-            keypoints_array = np.array(keypoints[-20:]) 
+        if len(keypoints) == 20 and (time.time() - last_prediction_time) > MIN_INTERVAL:
+            # Convierte lista de keypoints en arreglo numpy
+            keypoints = np.array(keypoints)
             # Predice en base de los keypoints guardados
-            prediction = model.predict(keypoints_array[np.newaxis, :, :])
-            # Limpia solo los frames usados para la prediccion
-            keypoints = keypoints[-10:] 
+            prediction = model.predict(keypoints[np.newaxis, :, :])
+            # Limpia la lista de keypoints para la siguiente prediccion
+            keypoints = []
 
             # Umbral de prediccion
-            if np.amax(prediction) > 0.75:
+            if np.amax(prediction) > 0.85:
                 # Revisa si la seña predicha es diferente a la anterior
                 if last_prediction != actions[np.argmax(prediction)]:
                     sentence.append(actions[np.argmax(prediction)])
                     last_prediction = actions[np.argmax(prediction)]
 
-        # Limita la oracion a 4 palabras
+        # Limita la oracion
         if len(sentence) > 4:
             sentence = sentence[-4:]
 
@@ -85,6 +89,20 @@ with mp.solutions.holistic.Holistic(
                     sentence.pop(len(sentence) - 2)
                     sentence[-1] = sentence[-1].capitalize()
         
+        # Texto de instrucciones
+        instructions = [
+            "Presiona [Espacio] para limpiar la pantalla",
+            "Presiona [Backspace] para borrar la ultima palabra"
+            ]
+        text_x = 10  # Margen izquierdo
+        text_y = 30  # Margen superior
+        line_height = 30  # Espaciado entre líneas
+
+        # Dibuja las instrucciones en la imagen
+        for i, instruction in enumerate(instructions):
+            cv2.putText(image, instruction, (text_x, text_y + i * line_height),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2, cv2.LINE_AA)
+
         textsize = cv2.getTextSize(' '.join(sentence), cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0]
         text_X_coord = (image.shape[1] - textsize[0]) // 2
 

@@ -57,7 +57,7 @@ with mp.solutions.holistic.Holistic(
             keypoints = []
 
             # Umbral de prediccion
-            if np.amax(prediction) > 0.85:
+            if np.amax(prediction) > 0.9:
                 # Revisa si la seña predicha es diferente a la anterior
                 if last_prediction != actions[np.argmax(prediction)]:
                     sentence.append(actions[np.argmax(prediction)])

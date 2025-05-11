@@ -25,8 +25,8 @@ MIN_INTERVAL = 1.5  # Tiempo mínimo entre predicciones en segundos
 cap = initialize_camera()
 
 # Creacion de objeto holistico para reconocer señas
-DETECTION_CONFIDENCE = 0.75
-TRACKING_CONFIDENCE = 0.75
+DETECTION_CONFIDENCE = 0.85
+TRACKING_CONFIDENCE = 0.85
 
 with mp.solutions.holistic.Holistic(
     min_detection_confidence=DETECTION_CONFIDENCE, 
